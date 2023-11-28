@@ -14,6 +14,7 @@ namespace CSpharpLr3ConsoleGame.Cards.Attacks
             EnergyCost = 1;
             Atk = 5;
             AtkCount = 1;
+            Description = $"Вы делаете выстрел, который наносит 5 урона врагу";
         }
     }
 }

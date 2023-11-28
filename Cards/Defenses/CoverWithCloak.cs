@@ -13,6 +13,7 @@ namespace CSpharpLr3ConsoleGame.Cards.Defenses
             Name = " Укрыться плащом";
             EnergyCost = 1;
             Def = 4;
+            Description = "Вы укрываетесь плащом от противника и ему сложнее попасть по вашему телу. Дает 4 защиты.";
         }
     }
 }

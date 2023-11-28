@@ -20,6 +20,7 @@ namespace CSpharpLr3ConsoleGame.Cards
             Name = "Бинт";
             EnergyCost = 1;
             Type = "Bandage";
+            Description = "Вы перевязываете свои раны бинтом. Лечит вас на 5 единиц здоровья";
         }
         public int Heal(Player player)
         {

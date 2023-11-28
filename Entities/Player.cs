@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Runtime.ConstrainedExecution;
 using System.Text;
 using System.Threading.Tasks;
 using CSpharpLr3ConsoleGame.Cards;
@@ -16,6 +17,7 @@ namespace CSpharpLr3ConsoleGame.Entities
         private int weaknessMultiplier;
         private int fragilityMultiplier;
         private int defenseMultiplier;
+        private int choosenCard;
         private List<Card> deck;
         private List<Card> playingDeck;
         private List<Card> hand;
@@ -30,6 +32,7 @@ namespace CSpharpLr3ConsoleGame.Entities
         public List<Card> Hand { get => hand; set => hand = value; }
         public List<Card> DiscardDeck { get => discardDeck; set => discardDeck = value; }
         internal List<Card> PlayingDeck { get => playingDeck; set => playingDeck = value; }
+        public int ChoosenCard { get => choosenCard; set => choosenCard = value; }
 
         public void ConvertDescriptions(int topIndex, int leftIndex, string s)
         {
@@ -69,6 +72,39 @@ namespace CSpharpLr3ConsoleGame.Entities
             
         }
 
+        public void ShowHand()
+        {
+            
+            for (int i = 0; i < Hand.Count; i++)
+            {
+                Console.SetCursorPosition(2, 1 + (i * 3));//TODO сделать значок-указатель для карты, которая подпадает под индекс ChoosenCard
+                Console.WriteLine(Program.GetStringWithLen('-', Console.WindowWidth/3 - 6));
+
+                Console.SetCursorPosition(2, 2 + (i * 3));
+                Console.WriteLine('|' + Hand[i].Name + Program.GetStringWithLen(' ' , Console.WindowWidth/3 - Hand[i].Name.Length - 8) + '|');
+
+                Console.SetCursorPosition(2, 3 + (i * 3));
+                Console.WriteLine(Program.GetStringWithLen('-', Console.WindowWidth / 3 - 6));
+
+                Console.SetCursorPosition(2, 11);
+                Console.WriteLine(Program.GetStringWithLen('-', Console.WindowWidth / 3 - 4));
+                Console.SetCursorPosition(2, 12);
+                Console.WriteLine("Описание карты");
+
+                var descriptionWords = Hand[ChoosenCard].SplitStringIfLonger(Console.WindowWidth/3 - 2);
+                for (int j = 0; j < descriptionWords.Split('\n').Length; j++)
+                {
+                    Console.SetCursorPosition(2, 13 + j);
+                    Console.WriteLine(descriptionWords.Split('\n')[j]);
+                }
+            }
+        }
+
+        public void PlayerTurn()
+        {
+
+        }
+
         public Player()
         {
             Deck = new List<Card>();
@@ -80,6 +116,7 @@ namespace CSpharpLr3ConsoleGame.Entities
             Defense = 0;
             HP = 60;
             Name = "Стрелок";
+            ChoosenCard = 0;
             damageMultiplier = 1;
             WeaknessMultiplier = 1;
             FragilityMultiplier = 1;
@@ -89,7 +126,6 @@ namespace CSpharpLr3ConsoleGame.Entities
             Deck.Add(new CoverWithCloak());
             Deck.Add(new CoverWithCloak());
             Deck.Add(new BandageCard());
-            Deck.Add(new CoverWithCloak());
             playingDeck = deck;
         }
     }

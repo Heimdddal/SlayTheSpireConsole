@@ -9,6 +9,16 @@ namespace CSpharpLr3ConsoleGame
 {
     internal class Program
     {
+        public static string GetStringWithLen(char a, int count)
+        {
+            string res = "";
+            for (int i = 0; i < count; i++)
+            {
+                res += a;
+            }
+            return res;
+        }
+
         static void Main(string[] args)
         {
             void BattleMode(Player player, Entity enemy)
@@ -19,6 +29,8 @@ namespace CSpharpLr3ConsoleGame
 
                 playground.enemy.ShowEnemy();
                 playground.enemy.ShowStats();
+                playground.gunner.GenerateHand();
+                playground.gunner.ShowHand();
 
                 do
                 {
@@ -27,15 +39,7 @@ namespace CSpharpLr3ConsoleGame
                 while (playground.enemy.HP > 0 && playground.gunner.HP > 0);
             }
 
-            string GetStringWithLen(char a, int count)
-            {
-                string res = "";
-                for (int i = 0; i < count; i++)
-                {
-                    res += a;
-                }
-                return res;
-            }
+            
             var player = new Player();
 
             var slime = new Slime();
