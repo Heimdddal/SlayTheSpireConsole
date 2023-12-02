@@ -14,6 +14,7 @@ namespace CSpharpLr3ConsoleGame.Entities
         private int hp;
         private int defense;
         private int maxHp;
+        private int Spikes;
         public int X { get; set; }
         public int Y { get; set; }
         public string Name { get { return name; } set { name = value; } }
@@ -21,6 +22,7 @@ namespace CSpharpLr3ConsoleGame.Entities
         public int HP { get { return hp; } set { if (value > maxHp) { hp = maxHp; } else { hp = value; }; } }
         public int Defense { get { return defense; } set { if (value < 0) { defense = 0; } else { defense = value; } } }
         public int MaxHp { get => maxHp; set => maxHp = value; }
+        public int Spikes1 { get => Spikes; set => Spikes = value; }
 
         public Entity()
         {
@@ -53,17 +55,35 @@ namespace CSpharpLr3ConsoleGame.Entities
 
         }
 
-        public void GetDamage(int damage)
+        public void GetDamage(int damage, Entity damageDealer)
         {
             if (defense > 0)
             {
-                var resistedDamage = damage -  defense;
+                var remainedDamage = damage -  defense;
                 defense -= damage;
-                if (resistedDamage <= 0)
+                if (remainedDamage <= 0)
                 {
-                    return;
+
+                }
+                else
+                {
+                    this.HP -= remainedDamage;
                 }
             }
+            else
+            {
+                this.HP -= damage;
+            }
+
+            if (this.Spikes > 0)
+            {
+                
+            }
+        }
+
+        public void ReflectDamage(int damage)
+        {
+
         }
     }
 }

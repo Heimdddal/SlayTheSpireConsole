@@ -40,7 +40,7 @@ namespace CSpharpLr3ConsoleGame
                     break;
                 case "Attack":
                     var damage = gunner.Hand[gunner.ChoosenCard].DealDamage(gunner.DamageMultiplier, gunner.WeaknessMultiplier);
-                    damage = damage - 
+                    enemy.GetDamage(damage, gunner);
                     break;
                 default:
                     break;
