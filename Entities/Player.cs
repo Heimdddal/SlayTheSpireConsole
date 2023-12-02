@@ -4,6 +4,7 @@ using System.Linq;
 using System.Runtime.ConstrainedExecution;
 using System.Text;
 using System.Threading.Tasks;
+using System.Transactions;
 using CSpharpLr3ConsoleGame.Cards;
 using CSpharpLr3ConsoleGame.Cards.Attacks;
 using CSpharpLr3ConsoleGame.Cards.Defenses;
@@ -32,16 +33,34 @@ namespace CSpharpLr3ConsoleGame.Entities
         public List<Card> Hand { get => hand; set => hand = value; }
         public List<Card> DiscardDeck { get => discardDeck; set => discardDeck = value; }
         internal List<Card> PlayingDeck { get => playingDeck; set => playingDeck = value; }
-        public int ChoosenCard { get => choosenCard; set => choosenCard = value; }
+        public int ChoosenCard { get => choosenCard; set { if (value < 0) { choosenCard = 2; } else if (value > 2) { choosenCard = 0; } else { choosenCard = value; } } }
 
-        public void ConvertDescriptions(int topIndex, int leftIndex, string s)
+        public void ClearDescription()
         {
-            var sArr = s.Split('\n');
-            for (int i = topIndex; i < sArr.Length; i++)
+            for (int i = 0; i < Console.WindowHeight - Console.WindowHeight / 4 - 12; i++)
             {
-                Console.SetCursorPosition(leftIndex, i);
-                Console.WriteLine(sArr[i]);
+                Console.SetCursorPosition(2, 13 + i);
+                Console.WriteLine(Program.GetStringWithLen(' ', Console.WindowWidth / 3 - 2));
             }
+        }
+
+        public void ChoosingMarkerChange()
+        {
+            for (int i = 0; i < 3; i++)
+            {
+                if (i == ChoosenCard)
+                {
+                    Console.SetCursorPosition(Console.WindowWidth / 3 - 4, 2 + (i * 3));
+                    Console.Write("<=");
+                }
+                else
+                {
+                    Console.SetCursorPosition(Console.WindowWidth / 3 - 4, 2 + (i * 3));
+                    Console.Write("  ");
+                }
+            }
+
+            
         }
 
         public void GenerateHand()
@@ -87,22 +106,75 @@ namespace CSpharpLr3ConsoleGame.Entities
                 Console.WriteLine(Program.GetStringWithLen('-', Console.WindowWidth / 3 - 6));
 
                 Console.SetCursorPosition(2, 11);
-                Console.WriteLine(Program.GetStringWithLen('-', Console.WindowWidth / 3 - 4));
+
+
+                Console.WriteLine(Program.GetStringWithLen('-', Console.WindowWidth / 3 - 2));
                 Console.SetCursorPosition(2, 12);
+
+                
                 Console.WriteLine("Описание карты");
 
-                var descriptionWords = Hand[ChoosenCard].SplitStringIfLonger(Console.WindowWidth/3 - 2);
-                for (int j = 0; j < descriptionWords.Split('\n').Length; j++)
+                ChoosingMarkerChange();
+                ShowDescription();
+            }
+        }
+
+        public void ShowDescription()
+        {
+            int rowCounter = 0;
+            string currentRow = "";
+            var descriptionWords = Hand[ChoosenCard].Description.Split(' ');
+            Console.SetCursorPosition(2, 13 + rowCounter);
+            for (int i = 0; i < descriptionWords.Length; i++)
+            {
+                
+                if ((currentRow.Length + descriptionWords[i].Length) >= Console.WindowWidth / 3 - 4)
                 {
-                    Console.SetCursorPosition(2, 13 + j);
-                    Console.WriteLine(descriptionWords.Split('\n')[j]);
+                    rowCounter++;
+                    Console.SetCursorPosition(2, 13 + rowCounter);
+                    currentRow = descriptionWords[i] + ' ';
+                    Console.Write(descriptionWords[i] + ' ');
+                }
+                else
+                {
+                    currentRow += descriptionWords[i] + ' ';
+                    Console.Write(descriptionWords[i] + ' ');
                 }
             }
         }
 
+        public void CardChoosing()
+        {
+            ConsoleKeyInfo key;
+            do
+            {
+                key = Console.ReadKey();
+                switch (key.Key)
+                {
+                    case ConsoleKey.UpArrow:
+                        ChoosenCard = ChoosenCard - 1;
+                        ClearDescription();
+                        ShowDescription();
+                        ChoosingMarkerChange();
+                        break;
+                    case ConsoleKey.DownArrow:
+                        ChoosenCard = ChoosenCard + 1;
+                        ClearDescription();
+                        ShowDescription();
+                        ChoosingMarkerChange();
+                        break;
+                    case ConsoleKey.Enter:
+                        PlayerTurn();
+                        break;
+                    default:
+                        break;
+                }
+            } while (true);
+        }
+
         public void PlayerTurn()
         {
-
+            
         }
 
         public Player()

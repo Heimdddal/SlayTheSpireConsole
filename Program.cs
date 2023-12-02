@@ -23,6 +23,8 @@ namespace CSpharpLr3ConsoleGame
         {
             void BattleMode(Player player, Entity enemy)
             {
+                ConsoleKeyInfo key;
+
                 var playground = new Playground(player, enemy);
 
                 playground.ShowPlayground();
@@ -34,12 +36,11 @@ namespace CSpharpLr3ConsoleGame
 
                 do
                 {
-
+                    playground.gunner.CardChoosing();
                 }
                 while (playground.enemy.HP > 0 && playground.gunner.HP > 0);
             }
 
-            
             var player = new Player();
 
             var slime = new Slime();

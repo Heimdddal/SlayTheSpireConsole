@@ -20,22 +20,10 @@ namespace CSpharpLr3ConsoleGame.Cards
         public string Type { get { return type; } set { type = value; } }
         public string Description { get => description; set => description = value; }
 
-        public string SplitStringIfLonger(int len)
-        {
-            var result = new List<string>();//TODO метод был для строкового типа result, но тогда не получится сделать нормальнй перенос. Стоит сделать result листом и возвращать сразу листом. Переделай для списика
-            var words = description.Split(' ');
-            for (int i = 0; i < words.Length; i++)
-            {
-                if ((result.Length + words[i].Length) > len)
-                {
-                    result += '\n' + words[i] + ' ';
-                }
-                else
-                {
-                    result += words[i] + ' ';
-                }
-            }
-            return result;
-        }
+        public virtual int Heal() { return 0; }
+        public virtual int DealDamage(int DamageMultiplier, int WeaknessMultiplier) { return 0; }
+        public virtual int SetSpikes() { return 0; }
+        public virtual int SetDefense(int DefMultiplier, int FragilityMultiplier) { return 0; }
+
     }
 }

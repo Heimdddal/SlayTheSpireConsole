@@ -19,7 +19,7 @@ namespace CSpharpLr3ConsoleGame.Entities
         public string Name { get { return name; } set { name = value; } }
         public string View { get { return view; } set { view = value; } }
         public int HP { get { return hp; } set { if (value > maxHp) { hp = maxHp; } else { hp = value; }; } }
-        public int Defense { get { return defense; } set { defense = value; } }
+        public int Defense { get { return defense; } set { if (value < 0) { defense = 0; } else { defense = value; } } }
         public int MaxHp { get => maxHp; set => maxHp = value; }
 
         public Entity()
@@ -51,6 +51,19 @@ namespace CSpharpLr3ConsoleGame.Entities
         public virtual void ShowStats()
         {
 
+        }
+
+        public void GetDamage(int damage)
+        {
+            if (defense > 0)
+            {
+                var resistedDamage = damage -  defense;
+                defense -= damage;
+                if (resistedDamage <= 0)
+                {
+                    return;
+                }
+            }
         }
     }
 }
