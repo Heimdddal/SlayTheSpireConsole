@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using CSpharpLr3ConsoleGame.Cards;
 using CSpharpLr3ConsoleGame.Entities;
 
 namespace CSpharpLr3ConsoleGame
@@ -30,13 +31,30 @@ namespace CSpharpLr3ConsoleGame
             switch (gunner.Hand[gunner.ChoosenCard].Type)
             {
                 case "Bandage":
-                    gunner.Hand[gunner.ChoosenCard].Heal();
+                    BandageCard bandage =  gunner.Hand[gunner.ChoosenCard] as BandageCard;
+                    if(bandage != null)
+                    {
+                        bandage.Heal(gunner);
+                    }
+                    else
+                    {
+                        throw new Exception("Похоже бинты сломали. Чини.");
+                    }
                     break;
                 case "Spikes":
-                    gunner.Hand[gunner.ChoosenCard].SetSpikes();
+                    Spikes spikesCard = gunner.Hand[gunner.ChoosenCard] as Spikes;
+                    if (spikesCard != null)
+                    {
+                        spikesCard.SetSpikes(gunner);
+                    }
+                    else
+                    {
+                        throw new Exception("Похоже шипы сломались. Чини.");
+                    }
                     break;
                 case "Defense":
-                    gunner.Hand[gunner.ChoosenCard].SetDefense(gunner.DefenseMultiplier, gunner.FragilityMultiplier);
+                    var defense = gunner.Hand[gunner.ChoosenCard].GetDefense(gunner.DefenseMultiplier, gunner.FragilityMultiplier);
+                    gunner.SetDefense(defense);
                     break;
                 case "Attack":
                     var damage = gunner.Hand[gunner.ChoosenCard].DealDamage(gunner.DamageMultiplier, gunner.WeaknessMultiplier);

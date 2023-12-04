@@ -13,6 +13,7 @@ namespace CSpharpLr3ConsoleGame.Cards.Defenses
             Name = "Кольчуга под плащом";
             EnergyCost = 2;
             Def = 9;
+            Description = "У вас под плащом кольчуга, которая защитит от большинства легкого оружия. Дает 9 защиты.";
         }
     }
 }

@@ -96,7 +96,7 @@ namespace CSpharpLr3ConsoleGame.Entities
             
             for (int i = 0; i < Hand.Count; i++)
             {
-                Console.SetCursorPosition(2, 1 + (i * 3));//TODO сделать значок-указатель для карты, которая подпадает под индекс ChoosenCard
+                Console.SetCursorPosition(2, 1 + (i * 3));//TODO энергия у карт
                 Console.WriteLine(Program.GetStringWithLen('-', Console.WindowWidth/3 - 6));
 
                 Console.SetCursorPosition(2, 2 + (i * 3));

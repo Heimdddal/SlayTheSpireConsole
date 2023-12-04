@@ -22,9 +22,9 @@ namespace CSpharpLr3ConsoleGame.Cards
             Type = "Bandage";
             Description = "Вы перевязываете свои раны бинтом. Лечит вас на 5 единиц здоровья";
         }
-        public override int Heal()
+        public void Heal(Entity entity)
         {
-            return HpRestore;
+            entity.HP += HpRestore;
         }
     }
 }

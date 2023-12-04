@@ -14,7 +14,7 @@ namespace CSpharpLr3ConsoleGame.Entities
         private int hp;
         private int defense;
         private int maxHp;
-        private int Spikes;
+        private int spikes;
         public int X { get; set; }
         public int Y { get; set; }
         public string Name { get { return name; } set { name = value; } }
@@ -22,7 +22,7 @@ namespace CSpharpLr3ConsoleGame.Entities
         public int HP { get { return hp; } set { if (value > maxHp) { hp = maxHp; } else { hp = value; }; } }
         public int Defense { get { return defense; } set { if (value < 0) { defense = 0; } else { defense = value; } } }
         public int MaxHp { get => maxHp; set => maxHp = value; }
-        public int Spikes1 { get => Spikes; set => Spikes = value; }
+        public int Spikes { get => spikes; set => spikes = value; }
 
         public Entity()
         {
@@ -55,17 +55,38 @@ namespace CSpharpLr3ConsoleGame.Entities
 
         }
 
-        public void GetDamage(int damage, Entity damageDealer)
+        public void GetDamage(List<int> attacks, Entity damageDealer)
+        {
+            foreach (int damage in attacks)
+            {
+                if (defense > 0)
+                {
+                    var remainedDamage = damage - defense;
+                    defense -= damage;
+                    if (remainedDamage > 0)
+                    {
+                        this.HP -= remainedDamage;
+                    }
+                }
+                else
+                {
+                    this.HP -= damage;
+                }
+
+                if (this.spikes > 0)
+                {
+                    damageDealer.GetReflectedDamage(this.spikes);
+                }
+            } 
+        }
+
+        public void GetReflectedDamage(int damage)
         {
             if (defense > 0)
             {
-                var remainedDamage = damage -  defense;
+                var remainedDamage = damage - defense;
                 defense -= damage;
-                if (remainedDamage <= 0)
-                {
-
-                }
-                else
+                if (remainedDamage > 0)
                 {
                     this.HP -= remainedDamage;
                 }
@@ -74,16 +95,11 @@ namespace CSpharpLr3ConsoleGame.Entities
             {
                 this.HP -= damage;
             }
-
-            if (this.Spikes > 0)
-            {
-                
-            }
         }
 
-        public void ReflectDamage(int damage)
+        public void SetDefense(int def)
         {
-
+            this.Defense = def;
         }
     }
 }

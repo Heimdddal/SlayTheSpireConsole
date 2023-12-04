@@ -13,7 +13,7 @@ namespace CSpharpLr3ConsoleGame.Cards
         
         public int Def { get { return def; } set { def = value; } }
 
-        public override int SetDefense(int DefMultiplier, int FragilityMultiplier)
+        public override int GetDefense(int DefMultiplier, int FragilityMultiplier)
         {
             return (def * DefMultiplier) * FragilityMultiplier;
         }
