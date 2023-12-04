@@ -148,7 +148,7 @@ namespace CSpharpLr3ConsoleGame.Entities
             ConsoleKeyInfo key;
             do
             {
-                key = Console.ReadKey();
+                key = Console.ReadKey(true);
                 switch (key.Key)
                 {
                     case ConsoleKey.UpArrow:
