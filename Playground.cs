@@ -22,9 +22,7 @@ namespace CSpharpLr3ConsoleGame
 
         public void ShowPlayground()
         {
-            Console.SetCursorPosition(Console.WindowWidth/3 + 5, (Console.WindowHeight - Console.WindowHeight/4) + 4);
-            Console.WriteLine($"HP: {gunner.HP}/{gunner.MaxHp}\t\tDef: {gunner.Defense}\t\tEnergy: {gunner.Energy}/3");
+            gunner.ShowPlayerStats();
         }
-
     }
 }

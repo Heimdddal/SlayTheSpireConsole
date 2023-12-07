@@ -1,6 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
+using System.Reflection.Metadata;
 using System.Runtime.ConstrainedExecution;
 using System.Text;
 using System.Threading.Tasks;
@@ -33,7 +35,7 @@ namespace CSpharpLr3ConsoleGame.Entities
         public List<Card> Hand { get => hand; set => hand = value; }
         public List<Card> DiscardDeck { get => discardDeck; set => discardDeck = value; }
         internal List<Card> PlayingDeck { get => playingDeck; set => playingDeck = value; }
-        public int ChoosenCard { get => choosenCard; set { if (value < 0) { choosenCard = 2; } else if (value > 2) { choosenCard = 0; } else { choosenCard = value; } } }
+        public int ChoosenCard { get => choosenCard; set { if (value < 0) { choosenCard = hand.Count - 1; } else if (value > hand.Count - 1) { choosenCard = 0; } else { choosenCard = value; } } }
 
         public void ClearDescription()
         {
@@ -42,6 +44,12 @@ namespace CSpharpLr3ConsoleGame.Entities
                 Console.SetCursorPosition(2, 13 + i);
                 Console.WriteLine(Program.GetStringWithLen(' ', Console.WindowWidth / 3 - 2));
             }
+        }
+
+        public void ShowPlayerStats()
+        {
+            Console.SetCursorPosition(Console.WindowWidth / 3 + 5, (Console.WindowHeight - Console.WindowHeight / 4) + 4);
+            Console.WriteLine($"HP: {this.HP}/{this.MaxHp}\t\tDef: {this.Defense}\t\tEnergy: {this.Energy}/3");
         }
 
         public void ChoosingMarkerChange()
@@ -91,32 +99,44 @@ namespace CSpharpLr3ConsoleGame.Entities
             
         }
 
-        public void ShowHand()
+        public void ClearHand()
         {
             
+            for (int i = 0; i < 11; i++)
+            {
+                Console.SetCursorPosition(2, 1 + i);
+                Console.WriteLine(Program.GetStringWithLen(' ', Console.WindowWidth / 3 - 6));
+            }
+            for (int i = 0; i < 12; i++)
+            {
+                Console.SetCursorPosition(2, 12 + i);
+                Console.WriteLine(Program.GetStringWithLen(' ', Console.WindowWidth / 3 - 6));
+            }
+        }
+
+        public void ShowHand()
+        {
+            ClearHand();
+
             for (int i = 0; i < Hand.Count; i++)
             {
-                Console.SetCursorPosition(2, 1 + (i * 3));//TODO энергия у карт
+                Console.SetCursorPosition(2, 1 + (i * 3));
                 Console.WriteLine(Program.GetStringWithLen('-', Console.WindowWidth/3 - 6));
 
                 Console.SetCursorPosition(2, 2 + (i * 3));
-                Console.WriteLine('|' + Hand[i].Name + Program.GetStringWithLen(' ' , Console.WindowWidth/3 - Hand[i].Name.Length - 8) + '|');
+                Console.WriteLine('|' + Hand[i].Name + Program.GetStringWithLen(' ', Console.WindowWidth / 3 - Hand[i].Name.Length - 8 - 2) + $"{this.Hand[i].EnergyCost} " + '|');
 
                 Console.SetCursorPosition(2, 3 + (i * 3));
                 Console.WriteLine(Program.GetStringWithLen('-', Console.WindowWidth / 3 - 6));
-
-                Console.SetCursorPosition(2, 11);
-
-
-                Console.WriteLine(Program.GetStringWithLen('-', Console.WindowWidth / 3 - 2));
-                Console.SetCursorPosition(2, 12);
-
-                
-                Console.WriteLine("Описание карты");
-
-                ChoosingMarkerChange();
-                ShowDescription();
             }
+            Console.SetCursorPosition(2, 11);
+            Console.WriteLine(Program.GetStringWithLen('-', Console.WindowWidth / 3 - 2));
+
+            Console.SetCursorPosition(2, 12);
+            Console.WriteLine("Описание карты");
+
+            ChoosingMarkerChange();
+            ShowDescription();
         }
 
         public void ShowDescription()
@@ -146,6 +166,7 @@ namespace CSpharpLr3ConsoleGame.Entities
         public void CardChoosing(Entity enemy)
         {
             ConsoleKeyInfo key;
+            ShowPlayerStats();
             do
             {
                 key = Console.ReadKey(true);
@@ -217,6 +238,18 @@ namespace CSpharpLr3ConsoleGame.Entities
                     throw new Exception("Card type error");
             }
             this.energy -= this.Hand[this.ChoosenCard].EnergyCost;
+            this.Hand.Remove(this.Hand[this.ChoosenCard]);
+            this.ChoosenCard = 0;
+            if (Hand.Count == 0)
+            {
+                Console.WriteLine("Turn Ends here");
+                return;//TODO сделать переброс на метод атаки противника и сбросить статы игроку(энергия и перегенерировать руку). Иначе он опять переход в CardChoosing
+            }
+            else
+            {
+                ShowHand();
+                CardChoosing(enemy);
+            }
         }
 
         public Player()

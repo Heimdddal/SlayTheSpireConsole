@@ -36,7 +36,7 @@ namespace CSpharpLr3ConsoleGame
 
                 do
                 {
-                    playground.gunner.CardChoosing();
+                    playground.gunner.CardChoosing(enemy);
                 }
                 while (playground.enemy.HP > 0 && playground.gunner.HP > 0);
             }
