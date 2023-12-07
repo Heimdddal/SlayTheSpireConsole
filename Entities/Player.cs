@@ -143,7 +143,7 @@ namespace CSpharpLr3ConsoleGame.Entities
             }
         }
 
-        public void CardChoosing()
+        public void CardChoosing(Entity enemy)
         {
             ConsoleKeyInfo key;
             do
@@ -164,17 +164,59 @@ namespace CSpharpLr3ConsoleGame.Entities
                         ChoosingMarkerChange();
                         break;
                     case ConsoleKey.Enter:
-                        PlayerTurn();
-                        break;
+                        if (this.Hand[ChoosenCard].EnergyCost <= this.energy)
+                        {
+                            PlayerTurn(enemy);
+                            break;
+                        }
+                        else
+                        {
+                            break;
+                        }
                     default:
                         break;
                 }
             } while (true);
         }
 
-        public void PlayerTurn()
+        public void PlayerTurn(Entity enemy)
         {
-            
+            switch (this.Hand[this.ChoosenCard].Type)
+            {
+                case "Bandage":
+                    BandageCard bandage = this.Hand[this.ChoosenCard] as BandageCard;
+                    if (bandage != null)
+                    {
+                        bandage.Heal(this);
+                    }
+                    else
+                    {
+                        throw new Exception("Похоже бинты сломали. Чини.");
+                    }
+                    break;
+                case "Spikes":
+                    Spikes spikesCard = this.Hand[this.ChoosenCard] as Spikes;
+                    if (spikesCard != null)
+                    {
+                        spikesCard.SetSpikes(this);
+                    }
+                    else
+                    {
+                        throw new Exception("Похоже шипы сломались. Чини.");
+                    }
+                    break;
+                case "Defense":
+                    var defense = this.Hand[this.ChoosenCard].GetDefense(this.DefenseMultiplier, this.FragilityMultiplier);
+                    this.SetDefense(defense);
+                    break;
+                case "Attack":
+                    var damage = this.Hand[this.ChoosenCard].DealDamage(this.DamageMultiplier, this.WeaknessMultiplier);
+                    enemy.GetDamage(damage, this);
+                    break;
+                default:
+                    throw new Exception("Card type error");
+            }
+            this.energy -= this.Hand[this.ChoosenCard].EnergyCost;
         }
 
         public Player()

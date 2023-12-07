@@ -26,43 +26,5 @@ namespace CSpharpLr3ConsoleGame
             Console.WriteLine($"HP: {gunner.HP}/{gunner.MaxHp}\t\tDef: {gunner.Defense}\t\tEnergy: {gunner.Energy}/3");
         }
 
-        public void PlayerTurn()
-        {
-            switch (gunner.Hand[gunner.ChoosenCard].Type)
-            {
-                case "Bandage":
-                    BandageCard bandage =  gunner.Hand[gunner.ChoosenCard] as BandageCard;
-                    if(bandage != null)
-                    {
-                        bandage.Heal(gunner);
-                    }
-                    else
-                    {
-                        throw new Exception("Похоже бинты сломали. Чини.");
-                    }
-                    break;
-                case "Spikes":
-                    Spikes spikesCard = gunner.Hand[gunner.ChoosenCard] as Spikes;
-                    if (spikesCard != null)
-                    {
-                        spikesCard.SetSpikes(gunner);
-                    }
-                    else
-                    {
-                        throw new Exception("Похоже шипы сломались. Чини.");
-                    }
-                    break;
-                case "Defense":
-                    var defense = gunner.Hand[gunner.ChoosenCard].GetDefense(gunner.DefenseMultiplier, gunner.FragilityMultiplier);
-                    gunner.SetDefense(defense);
-                    break;
-                case "Attack":
-                    var damage = gunner.Hand[gunner.ChoosenCard].DealDamage(gunner.DamageMultiplier, gunner.WeaknessMultiplier);
-                    enemy.GetDamage(damage, gunner);
-                    break;
-                default:
-                    break;
-            }
-        }
     }
 }
