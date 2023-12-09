@@ -194,6 +194,8 @@ namespace CSpharpLr3ConsoleGame.Entities
                         {
                             break;
                         }
+                    case ConsoleKey.Spacebar:
+                        return;
                     default:
                         break;
                 }
@@ -243,7 +245,7 @@ namespace CSpharpLr3ConsoleGame.Entities
             if (Hand.Count == 0)
             {
                 Console.WriteLine("Turn Ends here");
-                return;//TODO сделать переброс на метод атаки противника и сбросить статы игроку(энергия и перегенерировать руку). Иначе он опять переход в CardChoosing
+                return;
             }
             else
             {
@@ -273,6 +275,7 @@ namespace CSpharpLr3ConsoleGame.Entities
             Deck.Add(new CoverWithCloak());
             Deck.Add(new CoverWithCloak());
             Deck.Add(new BandageCard());
+            Deck.Add(new HeavyFire());
             playingDeck = deck;
         }
     }

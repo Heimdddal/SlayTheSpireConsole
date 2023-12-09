@@ -23,6 +23,8 @@ namespace CSpharpLr3ConsoleGame
         public void ShowPlayground()
         {
             gunner.ShowPlayerStats();
+            enemy.ShowEnemy();
+            enemy.ShowStats();
         }
     }
 }

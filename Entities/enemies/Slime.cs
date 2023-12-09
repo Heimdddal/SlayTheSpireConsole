@@ -19,8 +19,8 @@ namespace CSpharpLr3ConsoleGame.Entities.enemies
             Y = 5;
             Atk = rnd.Next(3,9); 
             Name = "Слизень";
-            MaxHp = 20;
-            HP = 20;
+            MaxHp = rnd.Next(20,30);
+            HP = MaxHp;  
             Defense = 0;
             View = "     ####  \n" +
                    "   ###  ###  \n" +
@@ -30,7 +30,7 @@ namespace CSpharpLr3ConsoleGame.Entities.enemies
 
         public override void ShowStats()
         {
-            var info = $"HP: {HP}/{MaxHp}\n\nAtk: {Atk}";
+            var info = $"HP: {HP}/{MaxHp}\n\nDef: {Defense}\n\nСледующий ход:\n {Atk}";
             var infoArr = info.Split('\n');
             for (int i = 0; i < infoArr.Length; i++)
             {
@@ -47,6 +47,11 @@ namespace CSpharpLr3ConsoleGame.Entities.enemies
             base.ShowEnemy();
 
             Console.ResetColor();
+        }
+
+        public override void EnemyTurn()
+        {
+            
         }
 
     }

@@ -55,6 +55,11 @@ namespace CSpharpLr3ConsoleGame.Entities
 
         }
 
+        public virtual void EnemyTurn()
+        {
+
+        }
+
         public void GetDamage(List<int> attacks, Entity damageDealer)
         {
             foreach (int damage in attacks)

@@ -29,8 +29,6 @@ namespace CSpharpLr3ConsoleGame
 
                 playground.ShowPlayground();
 
-                playground.enemy.ShowEnemy();
-                playground.enemy.ShowStats();
                 playground.gunner.GenerateHand();
                 playground.gunner.ShowHand();
 
