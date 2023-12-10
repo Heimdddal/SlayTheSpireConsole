@@ -21,8 +21,6 @@ namespace CSpharpLr3ConsoleGame.Cards
         public string Type { get { return type; } set { type = value; } }
         public string Description { get => description; set => description = value; }
 
-        public virtual List<int> DealDamage(int DamageMultiplier, int WeaknessMultiplier) { return new List<int>(); }
-        public virtual int GetDefense(int DefMultiplier, int FragilityMultiplier) { return 0; }
 
     }
 }

@@ -15,14 +15,20 @@ namespace CSpharpLr3ConsoleGame.Entities
         private int defense;
         private int maxHp;
         private int spikes;
+        private int behaviorIndex;
+        private double fragilityMultiplier;
+        private int fragilityDuration;
         public int X { get; set; }
         public int Y { get; set; }
         public string Name { get { return name; } set { name = value; } }
         public string View { get { return view; } set { view = value; } }
         public int HP { get { return hp; } set { if (value > maxHp) { hp = maxHp; } else { hp = value; }; } }
-        public int Defense { get { return defense; } set { if (value < 0) { defense = 0; } else { defense = value; } } }
+        public int Defense { get { return defense; } set { if (value <= 0) { defense = 0; } else { defense = value; } } }
         public int MaxHp { get => maxHp; set => maxHp = value; }
         public int Spikes { get => spikes; set => spikes = value; }
+        public int BehaviorIndex { get => behaviorIndex; set => behaviorIndex = value; }
+        public double FragilityMultiplier { get => fragilityMultiplier; set => fragilityMultiplier = value; }
+        public int FragilityDuration { get => fragilityDuration; set => fragilityDuration = value; }
 
         public Entity()
         {
@@ -52,22 +58,29 @@ namespace CSpharpLr3ConsoleGame.Entities
 
         public virtual void ShowStats()
         {
-
+            var info = $"HP: {HP}/{MaxHp}\n\nDef: {Defense}\n\n";
+            var infoArr = info.Split('\n');
+            for (int i = 0; i < infoArr.Length; i++)
+            {
+                Console.SetCursorPosition(X + 20, Y + i);
+                Console.WriteLine(infoArr[i]);
+            }
         }
 
         public virtual void EnemyTurn()
         {
-
+            var rnd = new Random();
+            BehaviorIndex = rnd.Next(100);
         }
 
         public void GetDamage(List<int> attacks, Entity damageDealer)
         {
             foreach (int damage in attacks)
             {
-                if (defense > 0)
+                if (Defense > 0)
                 {
-                    var remainedDamage = damage - defense;
-                    defense -= damage;
+                    var remainedDamage = damage - Defense;
+                    Defense -= damage;
                     if (remainedDamage > 0)
                     {
                         this.HP -= remainedDamage;
@@ -82,15 +95,16 @@ namespace CSpharpLr3ConsoleGame.Entities
                 {
                     damageDealer.GetReflectedDamage(this.spikes);
                 }
-            } 
+            }
+            this.ShowStats();
         }
 
         public void GetReflectedDamage(int damage)
         {
-            if (defense > 0)
+            if (Defense > 0)
             {
-                var remainedDamage = damage - defense;
-                defense -= damage;
+                var remainedDamage = damage - Defense;
+                Defense -= damage;
                 if (remainedDamage > 0)
                 {
                     this.HP -= remainedDamage;
@@ -104,7 +118,13 @@ namespace CSpharpLr3ConsoleGame.Entities
 
         public void SetDefense(int def)
         {
-            this.Defense = def;
+            this.Defense += def;
+        }
+
+        public void ApplyFragility(Entity Enemy, double Multiplier, int Duration)
+        {
+            Enemy.FragilityMultiplier = Multiplier;
+            Enemy.FragilityDuration = Duration;
         }
     }
 }

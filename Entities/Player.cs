@@ -16,26 +16,32 @@ namespace CSpharpLr3ConsoleGame.Entities
     internal class Player : Entity
     {
         private int energy;
-        private int damageMultiplier;
-        private int weaknessMultiplier;
-        private int fragilityMultiplier;
-        private int defenseMultiplier;
+        private double damageMultiplier;
+        private int damageMultiplierDuration;
+        private double weaknessMultiplier;
+        private int weaknessMultiplierDuration;
+        private double defenseMultiplier;
+        private int defenseMultiplierDuration;
         private int choosenCard;
         private List<Card> deck;
         private List<Card> playingDeck;
         private List<Card> hand;
         private List<Card> discardDeck;
+        private bool isDurationsShown;
 
-        public int DamageMultiplier { get => damageMultiplier; set => damageMultiplier = value; }
-        public int WeaknessMultiplier { get => weaknessMultiplier; set => weaknessMultiplier = value; }
+        public double DamageMultiplier { get => damageMultiplier; set => damageMultiplier = value; }
+        public double WeaknessMultiplier { get => weaknessMultiplier; set => weaknessMultiplier = value; }
         public int Energy { get => energy; set => energy = value; }
-        public int FragilityMultiplier { get => fragilityMultiplier; set => fragilityMultiplier = value; }
-        public int DefenseMultiplier { get => defenseMultiplier; set => defenseMultiplier = value; }
+        public double DefenseMultiplier { get => defenseMultiplier; set => defenseMultiplier = value; }
         public List<Card> Deck { get => deck; set => deck = value; }
         public List<Card> Hand { get => hand; set => hand = value; }
         public List<Card> DiscardDeck { get => discardDeck; set => discardDeck = value; }
         internal List<Card> PlayingDeck { get => playingDeck; set => playingDeck = value; }
         public int ChoosenCard { get => choosenCard; set { if (value < 0) { choosenCard = hand.Count - 1; } else if (value > hand.Count - 1) { choosenCard = 0; } else { choosenCard = value; } } }
+
+        public int DefenseMultiplierDuration { get => defenseMultiplierDuration; set { if (value == 0) { DefenseMultiplier = 1; defenseMultiplierDuration = value; } else { defenseMultiplierDuration = value; } } }
+        public int DamageMultiplierDuration { get => damageMultiplierDuration; set { if (value == 0) { DamageMultiplier = 1; damageMultiplierDuration = value; } else { damageMultiplierDuration = value; } } }
+        public int WeaknessMultiplierDuration { get => weaknessMultiplierDuration; set { if (value == 0) { weaknessMultiplier = 1; weaknessMultiplierDuration = value; } else { weaknessMultiplierDuration = value; } } }
 
         public void ClearDescription()
         {
@@ -44,6 +50,36 @@ namespace CSpharpLr3ConsoleGame.Entities
                 Console.SetCursorPosition(2, 13 + i);
                 Console.WriteLine(Program.GetStringWithLen(' ', Console.WindowWidth / 3 - 2));
             }
+        }
+
+        public void ShowPlayerDurations()
+        {
+            ClearHand();
+            Console.SetCursorPosition(2,11);
+            Console.WriteLine(Program.GetStringWithLen(' ', Console.WindowWidth / 3 - 2));
+
+            Console.SetCursorPosition(2, 1);
+            Console.WriteLine($"PLayer Effects:");
+
+            Console.SetCursorPosition(2, 4);
+            Console.WriteLine($"Defense multiplier: {DefenseMultiplier}");
+            Console.SetCursorPosition(2, 5);
+            Console.WriteLine($"Duration: {DefenseMultiplierDuration}");
+            
+            Console.SetCursorPosition(2, 7);
+            Console.WriteLine($"Damage multiplier: {DamageMultiplier}");
+            Console.SetCursorPosition(2, 8);
+            Console.WriteLine($"Duration: {DamageMultiplierDuration}");
+
+            Console.SetCursorPosition(2, 10);
+            Console.WriteLine($"Fragility multiplier: {FragilityDuration}");
+            Console.SetCursorPosition(2, 11);
+            Console.WriteLine($"Duration: {FragilityDuration}");
+
+            Console.SetCursorPosition(2, 13);
+            Console.WriteLine($"Weakness multiplier: {WeaknessMultiplier}");
+            Console.SetCursorPosition(2, 14);
+            Console.WriteLine($"Duration: {WeaknessMultiplierDuration}");
         }
 
         public void ShowPlayerStats()
@@ -100,43 +136,45 @@ namespace CSpharpLr3ConsoleGame.Entities
         }
 
         public void ClearHand()
-        {
-            
+        {w
             for (int i = 0; i < 11; i++)
             {
                 Console.SetCursorPosition(2, 1 + i);
-                Console.WriteLine(Program.GetStringWithLen(' ', Console.WindowWidth / 3 - 6));
+                Console.WriteLine(Program.GetStringWithLen(' ', Console.WindowWidth / 3 - 2));
             }
             for (int i = 0; i < 12; i++)
             {
                 Console.SetCursorPosition(2, 12 + i);
-                Console.WriteLine(Program.GetStringWithLen(' ', Console.WindowWidth / 3 - 6));
+                Console.WriteLine(Program.GetStringWithLen(' ', Console.WindowWidth / 3 - 2));
             }
         }
 
         public void ShowHand()
         {
             ClearHand();
-
-            for (int i = 0; i < Hand.Count; i++)
+            if (Hand.Count != 0)
             {
-                Console.SetCursorPosition(2, 1 + (i * 3));
-                Console.WriteLine(Program.GetStringWithLen('-', Console.WindowWidth/3 - 6));
+                for (int i = 0; i < Hand.Count; i++)
+                {
+                    Console.SetCursorPosition(2, 1 + (i * 3));
+                    Console.WriteLine(Program.GetStringWithLen('-', Console.WindowWidth / 3 - 6));
 
-                Console.SetCursorPosition(2, 2 + (i * 3));
-                Console.WriteLine('|' + Hand[i].Name + Program.GetStringWithLen(' ', Console.WindowWidth / 3 - Hand[i].Name.Length - 8 - 2) + $"{this.Hand[i].EnergyCost} " + '|');
+                    Console.SetCursorPosition(2, 2 + (i * 3));
+                    Console.WriteLine('|' + Hand[i].Name + Program.GetStringWithLen(' ', Console.WindowWidth / 3 - Hand[i].Name.Length - 8 - 2) + $"{this.Hand[i].EnergyCost} " + '|');
 
-                Console.SetCursorPosition(2, 3 + (i * 3));
-                Console.WriteLine(Program.GetStringWithLen('-', Console.WindowWidth / 3 - 6));
+                    Console.SetCursorPosition(2, 3 + (i * 3));
+                    Console.WriteLine(Program.GetStringWithLen('-', Console.WindowWidth / 3 - 6));
+                }
+
+                ChoosingMarkerChange();
+                ShowDescription();
             }
+            
             Console.SetCursorPosition(2, 11);
             Console.WriteLine(Program.GetStringWithLen('-', Console.WindowWidth / 3 - 2));
 
             Console.SetCursorPosition(2, 12);
             Console.WriteLine("Описание карты");
-
-            ChoosingMarkerChange();
-            ShowDescription();
         }
 
         public void ShowDescription()
@@ -173,27 +211,60 @@ namespace CSpharpLr3ConsoleGame.Entities
                 switch (key.Key)
                 {
                     case ConsoleKey.UpArrow:
-                        ChoosenCard = ChoosenCard - 1;
-                        ClearDescription();
-                        ShowDescription();
-                        ChoosingMarkerChange();
+                        if (Hand.Count != 0)
+                        {
+                            ChoosenCard = ChoosenCard - 1;
+                            ClearDescription();
+                            ShowDescription();
+                            ChoosingMarkerChange();
+                        }
                         break;
                     case ConsoleKey.DownArrow:
-                        ChoosenCard = ChoosenCard + 1;
-                        ClearDescription();
-                        ShowDescription();
-                        ChoosingMarkerChange();
+                        if (Hand.Count != 0)
+                        {
+                            ChoosenCard = ChoosenCard + 1;
+                            ClearDescription();
+                            ShowDescription();
+                            ChoosingMarkerChange();
+                        }
                         break;
                     case ConsoleKey.Enter:
-                        if (this.Hand[ChoosenCard].EnergyCost <= this.energy)
+                        if (Hand.Count != 0)
                         {
-                            PlayerTurn(enemy);
-                            break;
+
+                            if (this.Hand[ChoosenCard].EnergyCost <= this.energy)
+                            {
+                                PlayerTurn(enemy);
+                                break;
+                            }
+                            else
+                            {
+                                break;
+                            }
+                        }
+                        break;
+                    case ConsoleKey.Tab:
+                        if (isDurationsShown)
+                        { 
+                            if(Hand.Count != 0)
+                            {
+                                isDurationsShown = false;
+                                ShowHand();
+                                CardChoosing(enemy);
+                            }
+                            else 
+                            {
+                                isDurationsShown = false;
+                                ShowHand();
+                                CardChoosing(enemy);
+                            }
                         }
                         else
                         {
-                            break;
+                            ShowPlayerDurations();
+                            isDurationsShown = true;
                         }
+                        break;
                     case ConsoleKey.Spacebar:
                         return;
                     default:
@@ -207,34 +278,40 @@ namespace CSpharpLr3ConsoleGame.Entities
             switch (this.Hand[this.ChoosenCard].Type)
             {
                 case "Bandage":
-                    BandageCard bandage = this.Hand[this.ChoosenCard] as BandageCard;
-                    if (bandage != null)
+                    if (this.Hand[this.ChoosenCard] is BandageCard bandage)
                     {
                         bandage.Heal(this);
                     }
                     else
                     {
-                        throw new Exception("Похоже бинты сломали. Чини.");
+                        throw new Exception("Похоже бинты сломались. Обратитесь за помощью.");
                     }
                     break;
                 case "Spikes":
-                    Spikes spikesCard = this.Hand[this.ChoosenCard] as Spikes;
-                    if (spikesCard != null)
+                    if (this.Hand[this.ChoosenCard] is Spikes spikesCard)
                     {
                         spikesCard.SetSpikes(this);
                     }
                     else
                     {
-                        throw new Exception("Похоже шипы сломались. Чини.");
+                        throw new Exception("Похоже шипы сломались. обратитесь за помощью.");
                     }
                     break;
                 case "Defense":
-                    var defense = this.Hand[this.ChoosenCard].GetDefense(this.DefenseMultiplier, this.FragilityMultiplier);
-                    this.SetDefense(defense);
+                    if (this.Hand[this.ChoosenCard] is DefenseCard defCard)
+                    {
+                        this.SetDefense(defCard.GetDefense(this.DefenseMultiplier, this.FragilityMultiplier));
+                    }
+                    else 
+                    {
+                        throw new Exception("Похоже защита сломалась. Обратитесь за помощью.");
+                    }
                     break;
                 case "Attack":
-                    var damage = this.Hand[this.ChoosenCard].DealDamage(this.DamageMultiplier, this.WeaknessMultiplier);
-                    enemy.GetDamage(damage, this);
+                    if ( this.Hand[this.ChoosenCard] is AtkCard atkCard)
+                    {
+                        enemy.GetDamage(atkCard.DealDamage(this.DamageMultiplier, this.WeaknessMultiplier), this);
+                    }
                     break;
                 default:
                     throw new Exception("Card type error");
@@ -242,16 +319,10 @@ namespace CSpharpLr3ConsoleGame.Entities
             this.energy -= this.Hand[this.ChoosenCard].EnergyCost;
             this.Hand.Remove(this.Hand[this.ChoosenCard]);
             this.ChoosenCard = 0;
-            if (Hand.Count == 0)
-            {
-                Console.WriteLine("Turn Ends here");
-                return;
-            }
-            else
-            {
-                ShowHand();
-                CardChoosing(enemy);
-            }
+            ShowPlayerStats();
+
+            ShowHand();
+            CardChoosing(enemy);
         }
 
         public Player()

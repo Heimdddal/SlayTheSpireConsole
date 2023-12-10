@@ -14,7 +14,7 @@ namespace CSpharpLr3ConsoleGame.Cards.Attacks
             EnergyCost = 2;
             Atk = 3;
             AtkCount = 3;
-            Description = "Вы выпускаете все патронны из магазина вашего оружия. Наносит ондому врагу 3 урона 3 раза.";
+            Description = "Вы выпускаете все патронны из магазина вашего оружия. Наносит одному врагу 3 урона 3 раза.";
         }
     }
 }

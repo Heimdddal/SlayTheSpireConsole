@@ -13,9 +13,9 @@ namespace CSpharpLr3ConsoleGame.Cards
         
         public int Def { get { return def; } set { def = value; } }
 
-        public override int GetDefense(int DefMultiplier, int FragilityMultiplier)
+        public int GetDefense(double DefMultiplier, double FragilityMultiplier)
         {
-            return (def * DefMultiplier) * FragilityMultiplier;
+            return Convert.ToInt16(((def * DefMultiplier) * FragilityMultiplier));
         }
 
         public DefenseCard()

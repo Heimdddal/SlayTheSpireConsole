@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace CSpharpLr3ConsoleGame.Entities.enemies
 {
-    internal class Slime : Entities.Entity
+    internal class Slime : Entity
     {
         private int Atk { get; set; }
 
@@ -20,7 +20,7 @@ namespace CSpharpLr3ConsoleGame.Entities.enemies
             Atk = rnd.Next(3,9); 
             Name = "Слизень";
             MaxHp = rnd.Next(20,30);
-            HP = MaxHp;  
+            HP = MaxHp;
             Defense = 0;
             View = "     ####  \n" +
                    "   ###  ###  \n" +
@@ -30,13 +30,7 @@ namespace CSpharpLr3ConsoleGame.Entities.enemies
 
         public override void ShowStats()
         {
-            var info = $"HP: {HP}/{MaxHp}\n\nDef: {Defense}\n\nСледующий ход:\n {Atk}";
-            var infoArr = info.Split('\n');
-            for (int i = 0; i < infoArr.Length; i++)
-            {
-                Console.SetCursorPosition(X + 20, Y + i);
-                Console.WriteLine(infoArr[i]);
-            }
+            base.ShowStats();
             
         }
 
@@ -51,7 +45,23 @@ namespace CSpharpLr3ConsoleGame.Entities.enemies
 
         public override void EnemyTurn()
         {
-            
+            if (20 >= BehaviorIndex)
+            {
+
+            }
+            else if (21 <= BehaviorIndex && BehaviorIndex <= 60)
+            {
+                
+            }
+            else if (61 <= BehaviorIndex && BehaviorIndex <= 80)
+            { 
+                
+            }
+            else
+            {
+                
+            }
+            base.EnemyTurn();
         }
 
     }
