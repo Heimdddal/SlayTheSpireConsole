@@ -136,7 +136,7 @@ namespace CSpharpLr3ConsoleGame.Entities
         }
 
         public void ClearHand()
-        {w
+        {
             for (int i = 0; i < 11; i++)
             {
                 Console.SetCursorPosition(2, 1 + i);
