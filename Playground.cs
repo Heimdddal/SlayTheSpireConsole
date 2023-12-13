@@ -25,6 +25,7 @@ namespace CSpharpLr3ConsoleGame
             gunner.ShowPlayerStats();
             enemy.ShowEnemy();
             enemy.ShowStats();
+            enemy.NextEnemyTurnDetermination();
         }
     }
 }

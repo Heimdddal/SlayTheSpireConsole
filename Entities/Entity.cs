@@ -18,6 +18,12 @@ namespace CSpharpLr3ConsoleGame.Entities
         private int behaviorIndex;
         private double fragilityMultiplier;
         private int fragilityDuration;
+        private double damageMultiplier;
+        private int damageMultiplierDuration;
+        private double weaknessMultiplier;
+        private int weaknessMultiplierDuration;
+        private double defenseMultiplier;
+        private int defenseMultiplierDuration;
         public int X { get; set; }
         public int Y { get; set; }
         public string Name { get { return name; } set { name = value; } }
@@ -29,6 +35,12 @@ namespace CSpharpLr3ConsoleGame.Entities
         public int BehaviorIndex { get => behaviorIndex; set => behaviorIndex = value; }
         public double FragilityMultiplier { get => fragilityMultiplier; set => fragilityMultiplier = value; }
         public int FragilityDuration { get => fragilityDuration; set => fragilityDuration = value; }
+        public int DefenseMultiplierDuration { get => defenseMultiplierDuration; set { if (value == 0) { DefenseMultiplier = 1; defenseMultiplierDuration = value; } else { defenseMultiplierDuration = value; } } }
+        public int DamageMultiplierDuration { get => damageMultiplierDuration; set { if (value == 0) { DamageMultiplier = 1; damageMultiplierDuration = value; } else { damageMultiplierDuration = value; } } }
+        public int WeaknessMultiplierDuration { get => weaknessMultiplierDuration; set { if (value == 0) { weaknessMultiplier = 1; weaknessMultiplierDuration = value; } else { weaknessMultiplierDuration = value; } } }
+        public double DamageMultiplier { get => damageMultiplier; set => damageMultiplier = value; }
+        public double WeaknessMultiplier { get => weaknessMultiplier; set => weaknessMultiplier = value; }
+        public double DefenseMultiplier { get => defenseMultiplier; set => defenseMultiplier = value; }
 
         public Entity()
         {
@@ -56,7 +68,7 @@ namespace CSpharpLr3ConsoleGame.Entities
 
         }
 
-        public virtual void ShowStats()
+        public virtual int ShowStats()
         {
             var info = $"HP: {HP}/{MaxHp}\n\nDef: {Defense}\n\n";
             var infoArr = info.Split('\n');
@@ -65,12 +77,18 @@ namespace CSpharpLr3ConsoleGame.Entities
                 Console.SetCursorPosition(X + 20, Y + i);
                 Console.WriteLine(infoArr[i]);
             }
+            return infoArr.Length - 1;
         }
 
-        public virtual void EnemyTurn()
+        public virtual void NextEnemyTurnDetermination()
         {
             var rnd = new Random();
             BehaviorIndex = rnd.Next(100);
+        }
+
+        public virtual void EnemyTurn(Player player)
+        {
+            
         }
 
         public void GetDamage(List<int> attacks, Entity damageDealer)
@@ -126,5 +144,23 @@ namespace CSpharpLr3ConsoleGame.Entities
             Enemy.FragilityMultiplier = Multiplier;
             Enemy.FragilityDuration = Duration;
         }
+
+        public void ApplyWeakness(Entity Enemy, double Multiplier, int Duration)
+        {
+            Enemy.WeaknessMultiplier = Multiplier;
+            Enemy.WeaknessMultiplierDuration = Duration;
+        }
+
+        public void ApplyDamageBoost(double Multiplier, int Duration)
+        {
+            this.damageMultiplier = Multiplier;
+            this.DamageMultiplierDuration = Duration;
+        }
+
+        public void ApplyDefenseBoost(double Multiplier, int Duration)
+        {
+            this.DefenseMultiplier = Multiplier;
+            this.DefenseMultiplierDuration = Duration;
+        }   
     }
 }

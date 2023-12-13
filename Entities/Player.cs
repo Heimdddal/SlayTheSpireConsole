@@ -16,12 +16,7 @@ namespace CSpharpLr3ConsoleGame.Entities
     internal class Player : Entity
     {
         private int energy;
-        private double damageMultiplier;
-        private int damageMultiplierDuration;
-        private double weaknessMultiplier;
-        private int weaknessMultiplierDuration;
-        private double defenseMultiplier;
-        private int defenseMultiplierDuration;
+
         private int choosenCard;
         private List<Card> deck;
         private List<Card> playingDeck;
@@ -29,19 +24,15 @@ namespace CSpharpLr3ConsoleGame.Entities
         private List<Card> discardDeck;
         private bool isDurationsShown;
 
-        public double DamageMultiplier { get => damageMultiplier; set => damageMultiplier = value; }
-        public double WeaknessMultiplier { get => weaknessMultiplier; set => weaknessMultiplier = value; }
+
         public int Energy { get => energy; set => energy = value; }
-        public double DefenseMultiplier { get => defenseMultiplier; set => defenseMultiplier = value; }
         public List<Card> Deck { get => deck; set => deck = value; }
         public List<Card> Hand { get => hand; set => hand = value; }
         public List<Card> DiscardDeck { get => discardDeck; set => discardDeck = value; }
         internal List<Card> PlayingDeck { get => playingDeck; set => playingDeck = value; }
         public int ChoosenCard { get => choosenCard; set { if (value < 0) { choosenCard = hand.Count - 1; } else if (value > hand.Count - 1) { choosenCard = 0; } else { choosenCard = value; } } }
 
-        public int DefenseMultiplierDuration { get => defenseMultiplierDuration; set { if (value == 0) { DefenseMultiplier = 1; defenseMultiplierDuration = value; } else { defenseMultiplierDuration = value; } } }
-        public int DamageMultiplierDuration { get => damageMultiplierDuration; set { if (value == 0) { DamageMultiplier = 1; damageMultiplierDuration = value; } else { damageMultiplierDuration = value; } } }
-        public int WeaknessMultiplierDuration { get => weaknessMultiplierDuration; set { if (value == 0) { weaknessMultiplier = 1; weaknessMultiplierDuration = value; } else { weaknessMultiplierDuration = value; } } }
+
 
         public void ClearDescription()
         {
@@ -337,7 +328,7 @@ namespace CSpharpLr3ConsoleGame.Entities
             HP = 60;
             Name = "Стрелок";
             ChoosenCard = 0;
-            damageMultiplier = 1;
+            DamageMultiplier = 1;
             WeaknessMultiplier = 1;
             FragilityMultiplier = 1;
             DefenseMultiplier = 1;
