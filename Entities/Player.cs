@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Diagnostics;
+using System.Diagnostics.CodeAnalysis;
 using System.Linq;
 using System.Reflection.Metadata;
 using System.Runtime.ConstrainedExecution;
@@ -63,7 +64,7 @@ namespace CSpharpLr3ConsoleGame.Entities
             Console.WriteLine($"Duration: {DamageMultiplierDuration}");
 
             Console.SetCursorPosition(2, 10);
-            Console.WriteLine($"Fragility multiplier: {FragilityDuration}");
+            Console.WriteLine($"Fragility multiplier: {FragilityMultiplier}");
             Console.SetCursorPosition(2, 11);
             Console.WriteLine($"Duration: {FragilityDuration}");
 
@@ -75,8 +76,19 @@ namespace CSpharpLr3ConsoleGame.Entities
 
         public void ShowPlayerStats()
         {
+            ClearPlayerStats();      
+            Console.SetCursorPosition(5, (Console.WindowHeight - Console.WindowHeight / 4) + 4);
+            Console.WriteLine($"Stack of draws:{playingDeck.Count}\t Discard deck:{DiscardDeck.Count}");
             Console.SetCursorPosition(Console.WindowWidth / 3 + 5, (Console.WindowHeight - Console.WindowHeight / 4) + 4);
             Console.WriteLine($"HP: {this.HP}/{this.MaxHp}\t\tDef: {this.Defense}\t\tEnergy: {this.Energy}/3");
+        }
+
+        public void ClearPlayerStats()
+        {
+            Console.SetCursorPosition(5, (Console.WindowHeight - Console.WindowHeight / 4) + 4);
+            Console.WriteLine(Program.GetStringWithLen(' ', Console.WindowWidth / 3 - 10));
+            Console.SetCursorPosition(Console.WindowWidth / 3 + 5, (Console.WindowHeight - Console.WindowHeight / 4) + 4);
+            Console.WriteLine(Program.GetStringWithLen(' ', Console.WindowWidth / 3 - 10));
         }
 
         public void ChoosingMarkerChange()
@@ -93,9 +105,7 @@ namespace CSpharpLr3ConsoleGame.Entities
                     Console.SetCursorPosition(Console.WindowWidth / 3 - 4, 2 + (i * 3));
                     Console.Write("  ");
                 }
-            }
-
-            
+            } 
         }
 
         public void GenerateHand()
@@ -103,28 +113,31 @@ namespace CSpharpLr3ConsoleGame.Entities
             var rnd = new Random();
             if (playingDeck.Count < 3)
             {
-                Hand = playingDeck;
+                Hand.AddRange(playingDeck);
                 playingDeck.Clear();
-                playingDeck = discardDeck;
+                playingDeck.AddRange(discardDeck);
                 discardDeck.Clear();
-                for (int i = 0; i < 3 - Hand.Count; i++)
+                while (Hand.Count < 3)
                 {
-                    var index = rnd.Next(PlayingDeck.Count);
-                    Hand.Add(PlayingDeck[index]);
-                    playingDeck.Remove(playingDeck[index]);
+                    var index = rnd.Next(playingDeck.Count);
+                    Hand.Add(playingDeck[index]);
+                    playingDeck.RemoveAt(index);
                 }
             }
             else
             {
+                discardDeck.AddRange(Hand);
+                Hand.Clear();
                 for (int i = 0; i < 3; i++)
                 {
-                    var index = rnd.Next(PlayingDeck.Count);
-                    Hand.Add(PlayingDeck[index]);
-                    playingDeck.Remove(playingDeck[index]);
+                    var index = rnd.Next(playingDeck.Count);
+                    Hand.Add(playingDeck[index]);
+                    playingDeck.RemoveAt(index);
                 }
             }
-            
         }
+
+
 
         public void ClearHand()
         {
@@ -202,31 +215,36 @@ namespace CSpharpLr3ConsoleGame.Entities
                 switch (key.Key)
                 {
                     case ConsoleKey.UpArrow:
-                        if (Hand.Count != 0)
+                        if (!isDurationsShown)
                         {
-                            ChoosenCard = ChoosenCard - 1;
-                            ClearDescription();
-                            ShowDescription();
-                            ChoosingMarkerChange();
+                            if (Hand.Count != 0)
+                            {
+                                ChoosenCard--;
+                                ClearDescription();
+                                ShowDescription();
+                                ChoosingMarkerChange();
+                            } 
                         }
                         break;
                     case ConsoleKey.DownArrow:
-                        if (Hand.Count != 0)
+                        if (!isDurationsShown)
                         {
-                            ChoosenCard = ChoosenCard + 1;
-                            ClearDescription();
-                            ShowDescription();
-                            ChoosingMarkerChange();
+                            if (Hand.Count != 0)
+                            {
+                                ChoosenCard++;
+                                ClearDescription();
+                                ShowDescription();
+                                ChoosingMarkerChange();
+                            } 
                         }
                         break;
                     case ConsoleKey.Enter:
                         if (Hand.Count != 0)
                         {
-
                             if (this.Hand[ChoosenCard].EnergyCost <= this.energy)
                             {
                                 PlayerTurn(enemy);
-                                break;
+                                return; // Fixed the issue by adding a return statement here
                             }
                             else
                             {
@@ -236,18 +254,20 @@ namespace CSpharpLr3ConsoleGame.Entities
                         break;
                     case ConsoleKey.Tab:
                         if (isDurationsShown)
-                        { 
-                            if(Hand.Count != 0)
+                        {
+                            if (Hand.Count != 0)
                             {
                                 isDurationsShown = false;
                                 ShowHand();
                                 CardChoosing(enemy);
+                                return;
                             }
-                            else 
+                            else
                             {
                                 isDurationsShown = false;
                                 ShowHand();
                                 CardChoosing(enemy);
+                                return;
                             }
                         }
                         else
@@ -307,7 +327,10 @@ namespace CSpharpLr3ConsoleGame.Entities
                 default:
                     throw new Exception("Card type error");
             }
+
+            
             this.energy -= this.Hand[this.ChoosenCard].EnergyCost;
+            this.DiscardDeck.Add(this.Hand[this.ChoosenCard]);
             this.Hand.Remove(this.Hand[this.ChoosenCard]);
             this.ChoosenCard = 0;
             ShowPlayerStats();
@@ -315,6 +338,8 @@ namespace CSpharpLr3ConsoleGame.Entities
             ShowHand();
             CardChoosing(enemy);
         }
+
+
 
         public Player()
         {
@@ -338,7 +363,7 @@ namespace CSpharpLr3ConsoleGame.Entities
             Deck.Add(new CoverWithCloak());
             Deck.Add(new BandageCard());
             Deck.Add(new HeavyFire());
-            playingDeck = deck;
+            playingDeck = Deck;
         }
     }
 }

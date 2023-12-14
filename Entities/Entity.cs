@@ -34,10 +34,10 @@ namespace CSpharpLr3ConsoleGame.Entities
         public int Spikes { get => spikes; set => spikes = value; }
         public int BehaviorIndex { get => behaviorIndex; set => behaviorIndex = value; }
         public double FragilityMultiplier { get => fragilityMultiplier; set => fragilityMultiplier = value; }
-        public int FragilityDuration { get => fragilityDuration; set => fragilityDuration = value; }
-        public int DefenseMultiplierDuration { get => defenseMultiplierDuration; set { if (value == 0) { DefenseMultiplier = 1; defenseMultiplierDuration = value; } else { defenseMultiplierDuration = value; } } }
-        public int DamageMultiplierDuration { get => damageMultiplierDuration; set { if (value == 0) { DamageMultiplier = 1; damageMultiplierDuration = value; } else { damageMultiplierDuration = value; } } }
-        public int WeaknessMultiplierDuration { get => weaknessMultiplierDuration; set { if (value == 0) { weaknessMultiplier = 1; weaknessMultiplierDuration = value; } else { weaknessMultiplierDuration = value; } } }
+        public int FragilityDuration { get => fragilityDuration; set { if (value <= 0) { FragilityMultiplier = 1; fragilityDuration = 0; } else { fragilityDuration = value; } } }
+        public int DefenseMultiplierDuration { get => defenseMultiplierDuration; set { if (value <= 0) { DefenseMultiplier = 1; defenseMultiplierDuration = 0; } else { defenseMultiplierDuration = value; } } }
+        public int DamageMultiplierDuration { get => damageMultiplierDuration; set { if (value <= 0) { DamageMultiplier = 1; damageMultiplierDuration = 0; } else { damageMultiplierDuration = value; } } }
+        public int WeaknessMultiplierDuration { get => weaknessMultiplierDuration; set { if (value <= 0) { WeaknessMultiplier = 1; weaknessMultiplierDuration = 0; } else { weaknessMultiplierDuration = value; } } }
         public double DamageMultiplier { get => damageMultiplier; set => damageMultiplier = value; }
         public double WeaknessMultiplier { get => weaknessMultiplier; set => weaknessMultiplier = value; }
         public double DefenseMultiplier { get => defenseMultiplier; set => defenseMultiplier = value; }
@@ -70,6 +70,7 @@ namespace CSpharpLr3ConsoleGame.Entities
 
         public virtual int ShowStats()
         {
+            ClearStats();
             var info = $"HP: {HP}/{MaxHp}\n\nDef: {Defense}\n\n";
             var infoArr = info.Split('\n');
             for (int i = 0; i < infoArr.Length; i++)
@@ -78,6 +79,15 @@ namespace CSpharpLr3ConsoleGame.Entities
                 Console.WriteLine(infoArr[i]);
             }
             return infoArr.Length - 1;
+        }
+
+        public void ClearStats()
+        {
+            for (int i = 0; i < 2; i++)
+            {
+                Console.SetCursorPosition(X + 20, Y + i);
+                Console.WriteLine(Program.GetStringWithLen(' ', 10)); 
+            }
         }
 
         public virtual void NextEnemyTurnDetermination()
@@ -114,7 +124,11 @@ namespace CSpharpLr3ConsoleGame.Entities
                     damageDealer.GetReflectedDamage(this.spikes);
                 }
             }
-            this.ShowStats();
+            if (!(this is Player))
+            {
+                this.ShowStats();
+            }
+
         }
 
         public void GetReflectedDamage(int damage)
@@ -161,6 +175,45 @@ namespace CSpharpLr3ConsoleGame.Entities
         {
             this.DefenseMultiplier = Multiplier;
             this.DefenseMultiplierDuration = Duration;
-        }   
+        }
+
+        public void DurationsDecrease()
+        {
+            if (this.DefenseMultiplierDuration > 0)
+            {
+                this.DefenseMultiplierDuration--;
+            }
+            else
+            {
+                this.DefenseMultiplier = 1;
+            }
+
+            if (this.DamageMultiplierDuration > 0)
+            {
+                this.DamageMultiplierDuration--;
+            }
+            else
+            {
+                this.DamageMultiplier = 1;
+            }
+
+            if (this.FragilityDuration > 0)
+            {
+                this.FragilityDuration--;
+            }
+            else
+            {
+                this.FragilityMultiplier = 1;
+            }
+
+            if (this.WeaknessMultiplierDuration > 0)
+            {
+                this.WeaknessMultiplierDuration--;
+            }
+            else
+            {
+                this.WeaknessMultiplier = 1;
+            }
+        }
     }
 }

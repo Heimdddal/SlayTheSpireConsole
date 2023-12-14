@@ -27,5 +27,19 @@ namespace CSpharpLr3ConsoleGame
             enemy.ShowStats();
             enemy.NextEnemyTurnDetermination();
         }
+
+        public void AfterBothTurns()
+        {
+            gunner.ShowPlayerStats();
+            enemy.ShowStats();
+            enemy.NextEnemyTurnDetermination();
+            gunner.DurationsDecrease();
+            enemy.DurationsDecrease();
+            gunner.Defense = 0;
+            enemy.Defense = 0;
+            gunner.Energy = 3;
+            gunner.GenerateHand();
+            gunner.ShowHand();
+        }
     }
 }

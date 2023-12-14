@@ -21,11 +21,9 @@ namespace CSpharpLr3ConsoleGame
 
         static void Main(string[] args)
         {
-            void BattleMode(Player player, Entity enemy)
+            void BattleMode(Player player, Entity enemy, Playground playground)
             {
                 ConsoleKeyInfo key;
-
-                var playground = new Playground(player, enemy);
 
                 playground.ShowPlayground();
 
@@ -36,8 +34,20 @@ namespace CSpharpLr3ConsoleGame
                 {
                     playground.gunner.CardChoosing(enemy);
                     playground.enemy.EnemyTurn(player);
+                    playground.AfterBothTurns();
+
                 }
                 while (playground.enemy.HP > 0 && playground.gunner.HP > 0);
+                if (playground.gunner.HP <= 0)
+                {
+                    Console.Clear();
+                    Console.WriteLine("You lose");
+                }
+                else
+                {
+                    Console.Clear();
+                    Console.WriteLine("You win");
+                }
             }
 
             var player = new Player();
@@ -68,7 +78,7 @@ namespace CSpharpLr3ConsoleGame
                 Console.Write('-');
             }
 
-            BattleMode(player, slime);
+            BattleMode(player, slime, playground);
         }
     }
 }

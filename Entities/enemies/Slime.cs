@@ -29,15 +29,24 @@ namespace CSpharpLr3ConsoleGame.Entities.enemies
         }
 
         public void ShowStatsAndNextMove()
-        {
+        { 
+            base.ShowStats();
             var dismension = base.ShowStats();
 
-            Console.SetCursorPosition(X + 20, Y + dismension);
+            ClearNextMove();
+
+            Console.SetCursorPosition(Console.WindowWidth / 3 + 5, Console.WindowHeight - Console.WindowHeight / 4 - 5);
             Console.Write("Next move: ");
-            Console.SetCursorPosition(X + 20, Y + dismension + 1);
+            Console.SetCursorPosition(Console.WindowWidth / 3 + 5, Console.WindowHeight - Console.WindowHeight / 4 - 3);
             Console.WriteLine(NextMove);
         }
 
+
+        public void ClearNextMove()
+        {
+            Console.SetCursorPosition(Console.WindowWidth / 3 + 5, Console.WindowHeight - Console.WindowHeight / 4 - 3);
+            Console.WriteLine(Program.GetStringWithLen(' ', ((Console.WindowWidth/3) * 2) - 10));
+        }
         public override void ShowEnemy()
         {
             Console.ForegroundColor = Color;
@@ -49,15 +58,15 @@ namespace CSpharpLr3ConsoleGame.Entities.enemies
 
         public override void NextEnemyTurnDetermination()
         {
-            if (20 >= BehaviorIndex)
+            if (10 >= BehaviorIndex)
             {
                 NextMove = "Slime gonna apply fragility on your armor";
             }
-            else if (21 <= BehaviorIndex && BehaviorIndex <= 60)
+            else if (10 < BehaviorIndex && BehaviorIndex <= 60)
             {
                 NextMove = "Slime gonna attack you for 6 damage";
             }
-            else if (61 <= BehaviorIndex && BehaviorIndex <= 80)
+            else if (60 < BehaviorIndex && BehaviorIndex <= 90)
             {
                 NextMove = "Slime gonna attack you for 9 damage";
             }
