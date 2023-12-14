@@ -54,7 +54,9 @@ namespace CSpharpLr3ConsoleGame
 
             var slime = new Slime();
 
-            var playground = new Playground(player, slime);
+            var CursedSkull = new Cursed_skull();
+
+            var playground = new Playground(player, CursedSkull);
 
             for (int i = 0; i < Console.WindowWidth; i++)
             {
@@ -78,7 +80,7 @@ namespace CSpharpLr3ConsoleGame
                 Console.Write('-');
             }
 
-            BattleMode(player, slime, playground);
+            BattleMode(player, CursedSkull, playground);
         }
     }
 }
