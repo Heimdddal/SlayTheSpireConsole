@@ -41,5 +41,14 @@ namespace CSpharpLr3ConsoleGame
             gunner.GenerateHand();
             gunner.ShowHand();
         }
+
+        public static void ClearEnemyScreen()
+        {
+            for (int i = 1; i < (Console.WindowHeight - Console.WindowHeight / 4) - 1; i++)
+            {
+                Console.SetCursorPosition(Console.WindowWidth/3 + 2, i);
+                Console.WriteLine(Program.GetStringWithLen(' ', (Console.WindowWidth/3 * 2) - 3));
+            }
+        }
     }
 }

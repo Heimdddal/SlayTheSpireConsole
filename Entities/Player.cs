@@ -244,7 +244,7 @@ namespace CSpharpLr3ConsoleGame.Entities
                             if (this.Hand[ChoosenCard].EnergyCost <= this.energy)
                             {
                                 PlayerTurn(enemy);
-                                return; // Fixed the issue by adding a return statement here
+                                return;
                             }
                             else
                             {

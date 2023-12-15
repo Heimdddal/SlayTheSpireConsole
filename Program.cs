@@ -1,4 +1,7 @@
-﻿using CSpharpLr3ConsoleGame.Entities;
+﻿using CSpharpLr3ConsoleGame.Cards;
+using CSpharpLr3ConsoleGame.Cards.Attacks;
+using CSpharpLr3ConsoleGame.Cards.Defenses;
+using CSpharpLr3ConsoleGame.Entities;
 using CSpharpLr3ConsoleGame.Entities.enemies;
 using System.Net;
 using System.Reflection.Metadata;
@@ -19,8 +22,44 @@ namespace CSpharpLr3ConsoleGame
             return res;
         }
 
+
         static void Main(string[] args)
         {
+            var rewards = new List<Card> { new EmergencyPistol(), new SniperShot(), new ChainmailUnderCloak() };
+
+            void GetReward(Player player, List<Card> rewards)
+            {
+                Playground.ClearEnemyScreen();
+                ConsoleKeyInfo key;
+                Console.SetCursorPosition(Console.WindowWidth / 2, 10);
+                Console.WriteLine("Вы победили!!!");
+                Console.SetCursorPosition(Console.WindowWidth / 2, 11);
+                var rnd = new Random();
+                var rewardedCard = rewards[rnd.Next(rewards.Count)];
+                player.Deck.Add(rewardedCard);
+                Console.WriteLine($"В награду получена \"{rewardedCard.Name}\""); 
+                
+                do {
+                    key = Console.ReadKey(true);
+                } while (key.Key != ConsoleKey.Spacebar);
+
+                Playground.ClearEnemyScreen();
+            }
+
+            void DrawGreetings()
+            {
+                ConsoleKeyInfo key;
+
+                do
+                {   
+                    Console.SetCursorPosition(0, 10);
+                    Console.WriteLine("\tСтрелки вверх и вниз - выбор карты\n\tTab - просмотр активных эффектов на персонаже\n\tSpacebar - закончить ход\n\t(Нажмите spacebar чтобы начать)");
+                    key = Console.ReadKey(true);
+                } while (key.Key != ConsoleKey.Spacebar);
+
+                Console.Clear();
+            }
+
             void BattleMode(Player player, Entity enemy, Playground playground)
             {
                 ConsoleKeyInfo key;
@@ -38,15 +77,36 @@ namespace CSpharpLr3ConsoleGame
 
                 }
                 while (playground.enemy.HP > 0 && playground.gunner.HP > 0);
-                if (playground.gunner.HP <= 0)
+                if (player.HP <= 0)
                 {
                     Console.Clear();
-                    Console.WriteLine("You lose");
+                    Console.WriteLine("Вы проиграли");
                 }
-                else
+                GetReward(player, rewards);
+            }
+
+            void DrawBorders()
+            {
+                for (int i = 0; i < Console.WindowWidth; i++)
                 {
-                    Console.Clear();
-                    Console.WriteLine("You win");
+                    Console.Write('-');
+                }
+                string leftrightborderspace = new StringBuilder().Insert(0, " ", Console.WindowWidth - 3).ToString();
+                leftrightborderspace = leftrightborderspace.Insert(Console.WindowWidth / 3, "|");
+                for (int i = 0; i < Console.WindowHeight - 2; i++)
+                {
+                    if (i == Console.WindowHeight - Console.WindowHeight / 4)
+                    {
+                        Console.WriteLine("|" + GetStringWithLen('-', Console.WindowWidth - 2) + "|");
+                    }
+                    else
+                    {
+                        Console.WriteLine("|" + leftrightborderspace + "|");
+                    }
+                }
+                for (int i = 0; i < Console.WindowWidth; i++)
+                {
+                    Console.Write('-');
                 }
             }
 
@@ -56,30 +116,12 @@ namespace CSpharpLr3ConsoleGame
 
             var CursedSkull = new Cursed_skull();
 
-            var playground = new Playground(player, CursedSkull);
+            var playground = new Playground(player, slime);
 
-            for (int i = 0; i < Console.WindowWidth; i++)
-            {
-                Console.Write('-');
-            }
-            string leftrightborderspace = new StringBuilder().Insert(0, " ", Console.WindowWidth-3).ToString();
-            leftrightborderspace = leftrightborderspace.Insert(Console.WindowWidth / 3, "|");
-            for (int i = 0; i < Console.WindowHeight - 2; i++)
-            {
-                if (i == Console.WindowHeight - Console.WindowHeight/4)
-                {
-                    Console.WriteLine("|" + GetStringWithLen('-', Console.WindowWidth - 2) + "|");
-                }
-                else
-                {
-                    Console.WriteLine("|" + leftrightborderspace + "|");
-                }
-            }
-            for (int i = 0; i < Console.WindowWidth; i++)
-            {
-                Console.Write('-');
-            }
+            DrawGreetings();
 
+            BattleMode(player, slime, playground);
+            playground.enemy = CursedSkull;
             BattleMode(player, CursedSkull, playground);
         }
     }
